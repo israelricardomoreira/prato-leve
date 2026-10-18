@@ -1,0 +1,32 @@
+PRATO LEVE 5.0 - como publicar no GitHub Pages e instalar no celular dela
+
+1) PUBLICAR (uma vez só)
+   a. Entre em github.com e crie um repositório PÚBLICO chamado prato-leve
+      (o GitHub Pages grátis precisa de repositório público).
+   b. Clique em "uploading an existing file" e arraste TODOS os arquivos desta pasta
+      (index.html, sw.js, manifest.webmanifest, os 3 ícones, .nojekyll).
+      Clique em "Commit changes".
+   c. Vá em Settings > Pages > Source: "Deploy from a branch", Branch: main, pasta / (root).
+      Salve. Em 1 ou 2 minutos aparece o endereço:
+      https://SEU-USUARIO.github.io/prato-leve/
+
+2) INSTALAR NO CELULAR DELA
+   Abra o endereço no Chrome do celular dela > três pontinhos > "Instalar app".
+
+3) ATUALIZAR DEPOIS (quando eu mandar versão nova)
+   No repositório, "Add file" > "Upload files", arraste os arquivos novos por cima e confirme.
+   O app dela pega a versão nova na próxima vez que abrir com internet.
+   O progresso dela NÃO se perde: ele fica guardado no celular, no endereço do site,
+   e o endereço continua o mesmo.
+
+4) PARA NUNCA PERDER O PROGRESSO
+   - O app pede ao Chrome armazenamento persistente e guarda uma cópia automática extra.
+   - Toda semana o app lembra de fazer backup: Ajustes > "Baixar arquivo de backup"
+     (vai para Downloads; mande para o WhatsApp dela ou para você).
+   - O que apaga os dados: limpar os dados do Chrome/site, desinstalar o Chrome
+     ou trocar de endereço (domínio). Nesses casos, é só restaurar o arquivo de backup
+     na tela de boas-vindas ("Já tenho um backup").
+
+5) SE ELA JÁ USOU A VERSÃO DO NETLIFY
+   Endereços diferentes guardam dados separados. Antes de trocar:
+   no app antigo, Ajustes > Baixar arquivo de backup. No novo, "Já tenho um backup" > escolher o arquivo.
