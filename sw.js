@@ -1,5 +1,5 @@
 // Prato Leve: funciona offline. Mude a versão quando atualizar o app.
-const VERSION = 'prato-leve-v52';
+const VERSION = 'prato-leve-v53';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

@@ -1967,10 +1967,12 @@ function sheetBuild(){
   let h = sheetHead(b.id ? 'Editar prato' : 'Montar prato', stack.length > 1);
   h += `<label class="f" style="margin-top:6px">Nome do prato<input class="inp" id="b-nome" value="${esc(b.n)}" placeholder="Ex.: Almoço de segunda" autocomplete="off"></label>
     <div class="sub-h">Aparece em</div><div class="chips">${SLOTS.filter(s => s.id !== 'extra').map(s => `<button class="chip ${b.slots.indexOf(s.id)>=0?'on':''}" data-a="bslot" data-s="${s.id}" aria-pressed="${b.slots.indexOf(s.id)>=0}">${esc(s.n)}</button>`).join('')}</div>`;
+  const missTip = req.filter(r => r[1] && !has(r[0])).map(r => ROLES[r[0]].n.toLowerCase());
+  h += `<p class="hint plate-tip">${b.items.length && missTip.length ? `Boa ideia incluir ${esc(missTip.join(' e '))}, mas não é obrigatório: você pode salvar do jeito que comeu.` : !b.items.length ? 'Coloque o que você comeu. As seções abaixo são sugestões para um prato equilibrado, nada é obrigatório.' : 'Prato equilibrado. 👏'}</p>`;
   h += `<div class="req-list">` + req.map(r => { const role = r[0], must = r[1], ok = has(role);
     const mine = b.items.map((x,i) => ({x,i})).filter(o => o.x.r === role);
     const other = !mine.length && ok ? b.items.filter(x => roles(fOf(x.id)).indexOf(role) >= 0).map(x => fOf(x.id).n.toLowerCase()) : [];
-    return `<div class="req ${ok?'ok':''}"><div class="req-h"><span class="check">${ok?ICON.check:''}</span><b>${ROLES[role].n}</b><span class="status ${ok?'ok':must?'warn':''}">${ok?'ok':must?'obrigatório':'opcional'}</span></div>
+    return `<div class="req ${ok?'ok':''}"><div class="req-h"><span class="check">${ok?ICON.check:''}</span><b>${ROLES[role].n}</b><span class="status ${ok?'ok':must?'warn':''}">${ok?'ok':must?'recomendado':'opcional'}</span></div>
       ${other.length ? `<p class="hint">Já coberto por ${esc(other.join(', '))}.</p>` : ''}
       ${mine.map(o => { const f = fOf(o.x.id); return `<div class="logged-row"><span style="font-size:1.2rem">${f.e}</span><span class="nm">${esc(f.n)}<small>${esc(f.p)}</small></span><span class="qty"><button data-a="bqty" data-i="${o.i}" data-d="-0.5" aria-label="Diminuir">−</button><span class="num">${nf1.format(o.x.q)}×</span><button data-a="bqty" data-i="${o.i}" data-d="0.5" aria-label="Aumentar">+</button></span><button class="mini" data-a="bdel" data-i="${o.i}" aria-label="Remover">${ICON.trash}</button></div>`; }).join('')}
       <button class="btn ghost sm" data-a="bpick" data-r="${role}">+ ${mine.length ? 'Mais' : 'Escolher'} ${ROLES[role].n.toLowerCase()}</button></div>`; }).join('');
@@ -2601,7 +2603,7 @@ function measDiagram(k){
 }
 
 // ===================== v4: apresentação, cardápio, mercado, fazenda =====================
-const APP_VERSION = '5.2';
+const APP_VERSION = '5.3';
 function hydrateSil(){}
 
 // ---------- chuva ----------
@@ -2838,12 +2840,12 @@ const A = {
     syncBuildName(); const b = ctx.build, req = PLATE_REQ[plateKind(b.slots)];
     const miss = req.filter(r => r[1] && !b.items.some(x => roles(fOf(x.id)).indexOf(r[0]) >= 0)).map(r => ROLES[r[0]].n.toLowerCase());
     if (!b.items.length){ toast('Adicione pelo menos um alimento.'); return; }
-    if (miss.length){ toast('Falta ' + miss.join(' e ') + ' para fechar o prato.'); return; }
     const name = (b.n || '').trim() || ('Meu prato ' + (S.plates.length+1));
     const rec = {id:b.id || ('p'+Date.now()), n:name.slice(0,50), slots:b.slots.slice(), items:b.items.map(x => ({id:x.id, q:x.q, r:x.r}))};
     const i = S.plates.findIndex(x => x.id === rec.id); if (i >= 0) S.plates[i] = rec; else S.plates.push(rec);
-    if (el.dataset.eat && ctx.slot){ setMeal(ctx.slot, rec.items); closeSheet(); changed(); toast(`${rec.n} salvo e anotado!`); return; }
-    popSheet(); changed(); toast(`${rec.n} salvo nos seus pratos`);
+    const tip = miss.length ? ` Dica: da próxima vez, tenta incluir ${miss.join(' e ')}.` : '';
+    if (el.dataset.eat && ctx.slot){ setMeal(ctx.slot, rec.items); closeSheet(); changed(); toast(`${rec.n} salvo e anotado!${tip}`); return; }
+    popSheet(); changed(); toast(`${rec.n} salvo nos seus pratos.${tip}`);
   },
   bremove(el){ if (!armed(el, 'Toque de novo para apagar')) return; S.plates = S.plates.filter(x => x.id !== ctx.build.id); popSheet(); changed(); toast('Prato apagado'); },
   cswap(el){ const c = +el.dataset.c, i = +el.dataset.i; const it = getDraft(ctx.slot)[c].items[i]; openPicker({mode:'combo', c, i, orig:it.id, g:fOf(it.id).g}); },
